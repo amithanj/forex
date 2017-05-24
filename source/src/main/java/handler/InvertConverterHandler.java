@@ -1,7 +1,7 @@
 package handler;
 
 import converter.InvertConverter;
-import forex.CurrencyExchange;
+import forex.domain.CurrencyExchange;
 
 /**
  * @author amithanadig
@@ -18,26 +18,26 @@ import forex.CurrencyExchange;
  *
  */
 public class InvertConverterHandler implements ConverterHandler {
-	ConverterHandler next = null;
-	ConverterHandler first = null;
+	ConverterHandler nextHandler = null;
+	ConverterHandler firstHandler = null;
 	
 	@Override
-	public void setNext(ConverterHandler next) {
-		this.next = next;
+	public void setNextConverterHandler(ConverterHandler nextHandler) {
+		this.nextHandler = nextHandler;
 	}
 
 	@Override
-	public Double handleRequest(CurrencyExchange cur) {
-		if (InvertConverter.exists(cur.display())){
-			Double firstConv = first.handleRequest(new CurrencyExchange(cur.getTarget(),cur.getSource(),1.0));
-			return ((1/firstConv) * cur.getInput() );
+	public Double handleRequest(CurrencyExchange currencyExchange) {
+		if (InvertConverter.exists(currencyExchange.display())){
+			Double conversionRate = firstHandler.handleRequest(new CurrencyExchange(currencyExchange.getTerm(),currencyExchange.getBase(),1.0));
+			return ((1/conversionRate) * currencyExchange.getAmount() );
 		}
 		else{
-			return next.handleRequest(cur);
+			return nextHandler.handleRequest(currencyExchange);
 		}
 	}
-	public void setFirst(ConverterHandler first) {
-		this.first = first;
+	public void setFirstConverterHandler(ConverterHandler firstHandler) {
+		this.firstHandler = firstHandler;
 	}
 
 }

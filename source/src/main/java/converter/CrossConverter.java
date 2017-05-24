@@ -14,17 +14,17 @@ import handler.ConverterHandler;
  *
  */
 public class CrossConverter {
-	static Set<String> EUR_CROSS_CURRENCY;
-	ConverterHandler first = null;
+	static Set<String> EUR_CROSS_CURRENCY_SET;
+	ConverterHandler firstHandler = null;
 	public static void initialize(List<String> invertableCurrencies){
-		if(EUR_CROSS_CURRENCY == null){
-			EUR_CROSS_CURRENCY = new HashSet<String>();
+		if(EUR_CROSS_CURRENCY_SET == null){
+			EUR_CROSS_CURRENCY_SET = new HashSet<String>();
 		}
-		EUR_CROSS_CURRENCY.addAll(invertableCurrencies);
+		EUR_CROSS_CURRENCY_SET.addAll(invertableCurrencies);
 	}
 	
 	
 	public static boolean exists(String currencyPair){
-		return EUR_CROSS_CURRENCY.contains(currencyPair);
+		return EUR_CROSS_CURRENCY_SET.contains(currencyPair);
 	}
 }

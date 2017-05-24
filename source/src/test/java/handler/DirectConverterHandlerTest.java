@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import converter.DirectConverter;
-import forex.CurrencyExchange;
+import forex.domain.CurrencyExchange;
 import utils.ConfigReader;
 
 import static org.junit.Assert.*;

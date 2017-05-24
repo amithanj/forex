@@ -14,18 +14,18 @@ import java.util.HashMap;
  *
  */
 public class DirectConverter{
-	public static Map<String,String> forexes;
+	public static Map<String,String> FOREX_MAP;
 
 	public static void initialize(Properties properties){
-		if(forexes == null){
-			forexes = new HashMap<String,String>();
+		if(FOREX_MAP == null){
+			FOREX_MAP = new HashMap<String,String>();
 		}
-		forexes.putAll(properties.entrySet().stream().collect(
+		FOREX_MAP.putAll(properties.entrySet().stream().collect(
 				Collectors.toMap(e -> e.getKey().toString(), e -> e.getValue().toString())));
 		
 	}
 	public static Double getValue(String currencies){
-		String 	rate = forexes.get(currencies);		
+		String 	rate = FOREX_MAP.get(currencies);		
 		return  rate!=null?new Double(rate):null;
 	}
 }

@@ -1,6 +1,6 @@
 package handler;
 
-import forex.CurrencyExchange;
+import forex.domain.CurrencyExchange;
 
 /**
  * @author amithanadig
@@ -18,7 +18,7 @@ import forex.CurrencyExchange;
  *
  */
 public interface ConverterHandler{
-	public void setNext(ConverterHandler next);
-	public Double handleRequest(CurrencyExchange cur);
-	public default void  setFirst(ConverterHandler handler){}
+	public void setNextConverterHandler(ConverterHandler nextHandler);
+	public Double handleRequest(CurrencyExchange currencyExchange) throws UnknownCurrencyException;
+	public default void setFirstConverterHandler(ConverterHandler handler){}
 }

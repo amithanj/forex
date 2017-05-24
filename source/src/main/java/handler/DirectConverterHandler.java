@@ -1,7 +1,7 @@
 package handler;
 
 import converter.DirectConverter;
-import forex.CurrencyExchange;
+import forex.domain.CurrencyExchange;
 
 /**
  * @author amithanadig
@@ -12,20 +12,20 @@ import forex.CurrencyExchange;
  *
  */
 public class DirectConverterHandler implements ConverterHandler{
-	ConverterHandler next;
+	ConverterHandler nextHandler;
 	
-	public void setNext(ConverterHandler handler){
-		next = handler;
+	public void setNextConverterHandler(ConverterHandler handler){
+		nextHandler = handler;
 	}
 
 	@Override
-	public Double handleRequest(CurrencyExchange cur) {
-		Double rate = DirectConverter.getValue(cur.display());
+	public Double handleRequest(CurrencyExchange currencyExchanger) {
+		Double rate = DirectConverter.getValue(currencyExchanger.display());
 		if (rate != null){
-			return (rate * cur.getInput() );
+			return (rate * currencyExchanger.getAmount() );
 		}
 		else{
-			return next.handleRequest(cur);
+			return nextHandler.handleRequest(currencyExchanger);
 		}
 	}
 

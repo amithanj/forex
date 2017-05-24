@@ -12,9 +12,10 @@ import org.junit.Test;
 import converter.CrossConverter;
 import converter.DirectConverter;
 import converter.InvertConverter;
-import forex.CurrencyExchange;
+import forex.calculator.Main;
+import forex.domain.CurrencyExchange;
 import utils.ConfigReader;
-import utils.Util;
+import utils.FormatterUtil;
 
 public class CrossConverterHandlerTest {
 
@@ -39,13 +40,21 @@ public class CrossConverterHandlerTest {
 		testForexes.put("EURCZK",27.6028);
 		testForexes.put("EURDKK",7.4405);
 		DirectConverter.initialize(testForexes);
+		
+		Main.GENERAL_PROPERTIES = new Properties();
+		
+		
+				
+		Main.GENERAL_PROPERTIES.put("PRIMARY_CROSS_CURRENCY","USD");
+		Main.GENERAL_PROPERTIES.put("SECONDARY_CROSS_CURRENCY","EUR");
 		handlerDirect = new DirectConverterHandler();
 		handlerInvert = new InvertConverterHandler();
 		handlerCross = new CrossConverterHandler();
-		handlerDirect.setNext(handlerInvert);
-		handlerInvert.setFirst(handlerDirect);
-		handlerInvert.setNext(handlerCross);
-		handlerCross.setFirst(handlerDirect);
+		
+		handlerDirect.setNextConverterHandler(handlerInvert);
+		handlerInvert.setFirstConverterHandler(handlerDirect);
+		handlerInvert.setNextConverterHandler(handlerCross);
+		handlerCross.setFirstConverterHandler(handlerDirect);
 		
 		List<String> invertCurrencies = new ArrayList<String>();
 		invertCurrencies.add("JPYUSD");
@@ -65,19 +74,19 @@ public class CrossConverterHandlerTest {
 	@Test
 	public void testCrossWithEurCurrencies(){
 		CurrencyExchange crossInvMode = new CurrencyExchange("CZK","DKK",12.91);
-		assertEquals(new Double(3.48), Util.round(handlerCross.handleRequest(crossInvMode)));
+		assertEquals(new Double(3.48), FormatterUtil.round(handlerCross.handleRequest(crossInvMode)));
 	}
 	
 	@Test
 	public void testCrossWithUsdInvertedCurrencies(){
 		CurrencyExchange crossInvMode = new CurrencyExchange("JPY","GBP",21.2);
-		assertEquals(new Double(0.11), Util.round(handlerCross.handleRequest(crossInvMode)));
+		assertEquals(new Double(0.11), FormatterUtil.round(handlerCross.handleRequest(crossInvMode)));
 	}
 	
 	@Test
 	public void testCrossWithEurInvertedCurrencies(){
 		CurrencyExchange crossInvMode = new CurrencyExchange("CNY","NOK",14.0);
-		assertEquals(new Double(15.96), Util.round(handlerCross.handleRequest(crossInvMode)));
+		assertEquals(new Double(15.96), FormatterUtil.round(handlerCross.handleRequest(crossInvMode)));
 	}
 	
 	@Test

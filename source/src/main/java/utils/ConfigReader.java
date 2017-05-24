@@ -10,7 +10,7 @@ import java.util.Properties;
 
 public class ConfigReader {
 
-	public static Properties readForex(final String path){
+	public static Properties readProperties(final String path){
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(new File(path)));

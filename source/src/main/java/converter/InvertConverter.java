@@ -11,17 +11,17 @@ import java.util.Set;
  * Such currency pairs are read from invertibleCurrencies.properties and used during conversion.
  */
 public class InvertConverter {
-	static Set<String> forexes = null;
+	static Set<String> FOREX_SET = null;
 
 	public static void initialize(List<String> invertableCurrencies){
-		if(forexes == null){
-			forexes = new HashSet<String>();
+		if(FOREX_SET == null){
+			FOREX_SET = new HashSet<String>();
 		}
-		forexes.addAll(invertableCurrencies);
+		FOREX_SET.addAll(invertableCurrencies);
 	}
 	
 	public static boolean exists(String currencyPair){
-		return forexes.contains(currencyPair);
+		return FOREX_SET.contains(currencyPair);
 	}
 	
 }

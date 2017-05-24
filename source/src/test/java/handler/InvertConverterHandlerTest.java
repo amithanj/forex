@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import converter.DirectConverter;
 import converter.InvertConverter;
-import forex.CurrencyExchange;
+import forex.domain.CurrencyExchange;
 import utils.ConfigReader;
-import utils.Util;
+import utils.FormatterUtil;
 
 public class InvertConverterHandlerTest {
 
@@ -33,8 +33,8 @@ public class InvertConverterHandlerTest {
 		DirectConverter.initialize(testForexes);
 		handlerDirect = new DirectConverterHandler();
 		handlerInvert = new InvertConverterHandler();
-		handlerDirect.setNext(handlerInvert);
-		handlerInvert.setFirst(handlerDirect);
+		handlerDirect.setNextConverterHandler(handlerInvert);
+		handlerInvert.setFirstConverterHandler(handlerDirect);
 		List<String> testCurrencies = new ArrayList<String>();
 		testCurrencies.add("JPYUSD");
 		testCurrencies.add("USDNZD");
@@ -44,7 +44,7 @@ public class InvertConverterHandlerTest {
 	@Test
 	public void test() {
 		currecy_found = new CurrencyExchange("JPY","USD",22.0);
-		assertEquals(new Double(0.18), Util.round(handlerInvert.handleRequest(currecy_found)));
+		assertEquals(new Double(0.18), FormatterUtil.round(handlerInvert.handleRequest(currecy_found)));
 	}
 
 }
