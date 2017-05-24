@@ -18,13 +18,19 @@ To run the FX Calculator
 2) Change the permission on script exchange.sh to give execute permission. Run the following command for this
 	chmod u+x exchange.sh
 3) Make sure config folder is located in the same folder from where this is being run.
-4)Run the script exchange.sh with arguments
-./executable <Currency 1> <Amount> in <Currency 2> 
+4)Run the script exchange.sh with arguments in the next line. Multiple lines of currency pairs can be provided. Input of character 'q' indicates end of conversion process.  
+./executable  
+<Currency 1> <Amount> in <Currency 2>
+<Currency 3> <Amount> in <Currency 4>
+q
 Here Currency 1 is base currency
      Currency 2 is term currency
      Amount is amount to be converted
 
 Example -
-./exchange.sh AUD 10 in JPY
+./exchange.sh 
+AUD 10 in JPY
+AUD 20.2 in EUR 
+q
 
 executable.bat has been provided for windows OS.
