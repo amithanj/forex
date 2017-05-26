@@ -8,23 +8,26 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import utils.ConfigReader;
-
+@RunWith(PowerMockRunner.class)
 public class CrossConverterTest {
 
-	List<String> testCurrencies = null;
-	ConfigReader testReader = null;
+	List<String> crossCurrencies = null;
+	
 	@Before
 	public void setUp() throws Exception {
-		List<String> crossCurrencies = new ArrayList<String>();
+		PowerMockito.mockStatic(InvertConverter.class);
+		crossCurrencies = new ArrayList<String>();
 		crossCurrencies.add("INRJPY");
 		crossCurrencies.add("USDCZK");
-		InvertConverter.initialize(crossCurrencies);
 	}
 	
 	@Test
 	public void testGetExchangeRate() {
+		InvertConverter.initialize(crossCurrencies);
 		assertTrue(InvertConverter.exists("INRJPY"));		
 		assertFalse(InvertConverter.exists("EURGBP"));
 	}

@@ -23,10 +23,6 @@ public class CurrencyExchange {
 		return base+term;
 	}
 	
-	public String toString(){
-		return "source="+base+":target="+term+":rate="+amount;
-	}
-	
 	public String getBase(){
 		return base;
 	}
@@ -37,6 +33,35 @@ public class CurrencyExchange {
 	
 	public Double getAmount(){
 		return amount;
+	}
+	
+	public boolean equals(Object param) {
+	    if(param == null)
+	    {
+	        return false;
+	    }
+	    if (param == this)
+	    {
+	        return true;
+	    }
+	    if (getClass() != param.getClass())
+	    {
+	        return false;
+	    }
+	     
+	    CurrencyExchange toCompare = (CurrencyExchange) param;
+	    return (this.getBase().equals(toCompare.getBase()) && this.getTerm().equals(toCompare.getTerm()) && this.getAmount().equals(toCompare.getAmount()) );
+	     
+	}
+	
+	public int hashCode(){
+	    return (int) base.hashCode() *
+	                 term.hashCode() *
+	                 amount.hashCode();
+	}
+	
+	public String toString(){
+		return "source="+base+":target="+term+":rate="+amount;
 	}
 }
 

@@ -4,18 +4,20 @@ import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.*;
 import converter.DirectConverter;
-import utils.ConfigReader;
 
+@RunWith(PowerMockRunner.class)
 public class DirectConverterTest {
 
-	Properties testCurrencies = null;
-	ConfigReader testReader = null;
-	Properties currencies = null;
 	@Before
 	public void setUp() throws Exception {
+		PowerMockito.mockStatic(DirectConverter.class);
+		
 		Properties testForexes = new Properties();
 		testForexes.put("EURUSD", 1.2323);
 		testForexes.put("GBPINR", 86.12);

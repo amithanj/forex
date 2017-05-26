@@ -8,6 +8,8 @@ import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.powermock.api.mockito.PowerMockito;
+import static org.mockito.Mockito.*;
 
 import converter.CrossConverter;
 import converter.DirectConverter;
@@ -31,24 +33,24 @@ public class CrossConverterHandlerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Properties testForexes = new Properties();
-		testForexes.put("USDJPY", 119.95);
-		testForexes.put("GBPUSD", 1.5683);
-		testForexes.put("USDCNY", 6.1715);
-		testForexes.put("EURUSD", 1.2315);
-		testForexes.put("EURNOK", 8.6651);
-		testForexes.put("EURCZK",27.6028);
-		testForexes.put("EURDKK",7.4405);
-		DirectConverter.initialize(testForexes);
+		PowerMockito.mockStatic(DirectConverter.class);
+		PowerMockito.mockStatic(InvertConverter.class);
+		PowerMockito.mockStatic(CrossConverter.class);
+		Properties testForexes = mock(Properties.class);
+		when(testForexes.get("USDJPY")).thenReturn("119.95");
+		when(testForexes.get("GBPUSD")).thenReturn("1.5683");
+		when(testForexes.get("USDCNY")).thenReturn("6.1715");
+		when(testForexes.get("EURUSD")).thenReturn("1.2315");
+		when(testForexes.get("EURNOK")).thenReturn("8.6651");
+		when(testForexes.get("EURCZK")).thenReturn("27.6028");
+		when(testForexes.get("EURDKK")).thenReturn("7.4405");
 		
-		Main.GENERAL_PROPERTIES = new Properties();
+		Main.GENERAL_PROPERTIES = mock(Properties.class);//new Properties();
+		when(Main.GENERAL_PROPERTIES.getProperty("PRIMARY_CROSS_CURRENCY")).thenReturn("USD");
+		when(Main.GENERAL_PROPERTIES.getProperty("SECONDARY_CROSS_CURRENCY")).thenReturn("EUR");
 		
-		
-				
-		Main.GENERAL_PROPERTIES.put("PRIMARY_CROSS_CURRENCY","USD");
-		Main.GENERAL_PROPERTIES.put("SECONDARY_CROSS_CURRENCY","EUR");
-		handlerDirect = new DirectConverterHandler();
-		handlerInvert = new InvertConverterHandler();
+		handlerDirect = mock(DirectConverterHandler.class);
+		handlerInvert = mock(InvertConverterHandler.class);
 		handlerCross = new CrossConverterHandler();
 		
 		handlerDirect.setNextConverterHandler(handlerInvert);
@@ -62,7 +64,6 @@ public class CrossConverterHandlerTest {
 		invertCurrencies.add("USDEUR");
 		invertCurrencies.add("CZKEUR");
 		invertCurrencies.add("CNYUSD");
-		InvertConverter.initialize(invertCurrencies);
 		
 		List<String> crossCurrencies = new ArrayList<String>();
 		crossCurrencies.add("USDNOK");
@@ -73,24 +74,34 @@ public class CrossConverterHandlerTest {
 	
 	@Test
 	public void testCrossWithEurCurrencies(){
+		when(handlerDirect.handleRequest(new CurrencyExchange("CZK","EUR",1.0))).thenReturn(new Double("0.03622"));
+		when(handlerDirect.handleRequest(new CurrencyExchange("EUR","DKK",1.0))).thenReturn(new Double("7.4405"));
 		CurrencyExchange crossInvMode = new CurrencyExchange("CZK","DKK",12.91);
 		assertEquals(new Double(3.48), FormatterUtil.round(handlerCross.handleRequest(crossInvMode)));
 	}
 	
 	@Test
 	public void testCrossWithUsdInvertedCurrencies(){
+		when(handlerDirect.handleRequest(new CurrencyExchange("JPY","USD",1.0))).thenReturn(new Double("0.0083"));
+		when(handlerDirect.handleRequest(new CurrencyExchange("USD","GBP",1.0))).thenReturn(new Double("0.6376"));
 		CurrencyExchange crossInvMode = new CurrencyExchange("JPY","GBP",21.2);
 		assertEquals(new Double(0.11), FormatterUtil.round(handlerCross.handleRequest(crossInvMode)));
 	}
 	
 	@Test
 	public void testCrossWithEurInvertedCurrencies(){
+		when(handlerDirect.handleRequest(new CurrencyExchange("CNY","EUR",1.0))).thenReturn(new Double("0.1315"));
+		when(handlerDirect.handleRequest(new CurrencyExchange("EUR","NOK",1.0))).thenReturn(new Double("8.6651"));
 		CurrencyExchange crossInvMode = new CurrencyExchange("CNY","NOK",14.0);
-		assertEquals(new Double(15.96), FormatterUtil.round(handlerCross.handleRequest(crossInvMode)));
+		assertEquals(new Double(15.95), FormatterUtil.round(handlerCross.handleRequest(crossInvMode)));
 	}
 	
 	@Test
 	public void testWithUnknownBaseCurrency(){
+		when(handlerDirect.handleRequest(new CurrencyExchange("CHF","USD",1.0))).thenReturn(null);
+		when(handlerDirect.handleRequest(new CurrencyExchange("USD","EUR",1.0))).thenReturn(new Double("0.8120"));
+		when(handlerDirect.handleRequest(new CurrencyExchange("EUR","NOK",1.0))).thenReturn(new Double("8.6651"));
+		
 		CurrencyExchange crossUnknownBase = new CurrencyExchange("CHF","NOK",14.0);
 		assertEquals(null, handlerCross.handleRequest(crossUnknownBase));
 	}
@@ -98,6 +109,9 @@ public class CrossConverterHandlerTest {
 	@Test
 	public void testWithUnknownTermCurrency(){
 		CurrencyExchange crossUnknownBase = new CurrencyExchange("CNY","CHF",14.0);
+		when(handlerDirect.handleRequest(new CurrencyExchange("CNY","USD",1.0))).thenReturn(null);
+		when(handlerDirect.handleRequest(new CurrencyExchange("USD","CHF",1.0))).thenReturn(null);
+		
 		assertEquals(null, handlerCross.handleRequest(crossUnknownBase));
 	}
 }

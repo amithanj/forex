@@ -6,33 +6,32 @@ import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
 
-import converter.DirectConverter;
 import forex.domain.CurrencyExchange;
-import utils.ConfigReader;
 
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 
 public class DirectConverterHandlerTest {
-	
 	List<String> testCurrencies = null;
-	DirectConverterHandler handler = null;
-	ConfigReader testReader = null;
-	CurrencyExchange currecy_found = null;
+	DirectConverterHandler dirctHandler = null;
+	InvertConverterHandler invertHandler = null;
 	Properties testForexes = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		handler = new DirectConverterHandler();
-		Properties testForexes = new Properties();
-		testForexes.put("CADUSD", 0.8711);
-		testForexes.put("GBPINR", 86.12);
-		DirectConverter.initialize(testForexes);
+		testForexes = mock(Properties.class);
+		dirctHandler = new DirectConverterHandler();
+		invertHandler = mock(InvertConverterHandler.class);
+		dirctHandler.setNextConverterHandler(invertHandler);
+		when(testForexes.get("CADUSD")).thenReturn("0.8711");
+		when(testForexes.get("GBPINR")).thenReturn("86.12");
 	}
 
 	@Test
-	public void test() {
-		currecy_found = new CurrencyExchange("CAD","USD",22.0);
-		assertEquals(new Double(19.1642), handler.handleRequest(currecy_found));
+	public void testDirectConversion() {
+		assertEquals(new Double(19.1642), dirctHandler.handleRequest(new CurrencyExchange("CAD","USD",22.0)));
 	}
+	
+	
 }

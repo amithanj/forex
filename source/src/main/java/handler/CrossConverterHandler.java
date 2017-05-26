@@ -36,8 +36,6 @@ public class CrossConverterHandler implements ConverterHandler {
 			crossCurrency = secondaryCrossCurrency;
 		}
 			
-		String currencyPair = currencyExchange.getBase()+crossCurrency;
-		
 		if (currencyExchange.getTerm().equals(primaryCrossCurrency) && !crossCurrency.equals(secondaryCrossCurrency)){
 			return null;
 		}
@@ -45,8 +43,6 @@ public class CrossConverterHandler implements ConverterHandler {
 			return null;	
 		}
 		Double initialConversionRate = firstHandler.handleRequest(new CurrencyExchange(currencyExchange.getBase(),crossCurrency,1.0));
-		
-		currencyPair = crossCurrency+currencyExchange.getTerm();
 		
 		Double finalConversionRate = firstHandler.handleRequest(new CurrencyExchange(crossCurrency,currencyExchange.getTerm(),1.0));
 		

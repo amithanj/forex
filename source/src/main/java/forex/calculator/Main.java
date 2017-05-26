@@ -29,6 +29,7 @@ public class Main {
 		while ( !((line = scanner.nextLine()).equals("q")) ) {
 			process(line);
         }
+		scanner.close();
 	}
 	
 	public static void process(String input){
